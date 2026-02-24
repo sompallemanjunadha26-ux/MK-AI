@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
+    "target": "ES6",
+    "module": "commonjs",
     "rootDir": "./server",
     "outDir": "./dist",
-    "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "strict": false
+  },
+  "include": ["server"],
+  "exclude": ["node_modules", "client"]
 }

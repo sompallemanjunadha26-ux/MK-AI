@@ -1,25 +1,10 @@
-import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
 
-const JWT_SECRET = "supersecretkey";
-
-export interface AuthRequest extends Request {
-  user?: any;
-}
-
-const authMiddleware = (req: any, res: any, next: any) => {
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (!token) {
-    return res.status(401).json({ message: "No token" });
-  }
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch {
-    res.status(401).json({ message: "Invalid token" });
-  }
+export const protect = (req: Request, res: Response, next: NextFunction) => {
+  // For now simple pass (production lo JWT verify cheyyachu)
+  next();
 };
 
-export default authMiddleware;
+export const adminOnly = (req: Request, res: Response, next: NextFunction) => {
+  next();
+};

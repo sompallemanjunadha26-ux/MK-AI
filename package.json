@@ -1,34 +1,28 @@
 {
-  "name": "ai-platform",
+  "name": "mk-ai-backend",
   "version": "1.0.0",
-  "description": "AI SaaS Platform Backend",
+  "description": "MK-AI Production Backend",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "nodemon --watch server --exec ts-node server/server.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "axios": "^1.13.5",
+    "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",
-    "cors": "^2.8.6",
-    "dotenv": "^16.6.1",
-    "express": "^4.22.1",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^8.23.0",
-    "openai": "^6.23.0"
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
-    "@types/express": "^4.17.25",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^20.11.30",
-    "nodemon": "^3.1.0",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.3.3"
   }
 }
