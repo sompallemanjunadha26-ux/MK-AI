@@ -15,75 +15,18 @@ export default function Login() {
 
   const register = async () => {
     await API.post("/api/auth/register", { email, password });
-    alert("Registered. Now Login.");
+    alert("Registered");
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2>AI Terminal Login</h2>
-        <input
-          style={styles.input}
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          style={styles.input}
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button style={styles.button} onClick={login}>
-          Login
-        </button>
-        <button style={styles.registerBtn} onClick={register}>
-          Register
-        </button>
+    <div style={{height:"100vh",display:"flex",justifyContent:"center",alignItems:"center",background:"#0f172a"}}>
+      <div style={{background:"#1e293b",padding:40,borderRadius:10,width:350,color:"white"}}>
+        <h2>AI Terminal</h2>
+        <input style={{width:"100%",padding:10,margin:"10px 0"}} placeholder="Email" onChange={e=>setEmail(e.target.value)}/>
+        <input style={{width:"100%",padding:10,margin:"10px 0"}} type="password" placeholder="Password" onChange={e=>setPassword(e.target.value)}/>
+        <button style={{width:"100%",padding:10,background:"#f59e0b",border:"none"}} onClick={login}>Login</button>
+        <button style={{width:"100%",padding:10,background:"#334155",border:"none",marginTop:10,color:"white"}} onClick={register}>Register</button>
       </div>
     </div>
   );
 }
-
-const styles: any = {
-  container: {
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#0f172a",
-  },
-  card: {
-    background: "#1e293b",
-    padding: 40,
-    borderRadius: 10,
-    width: 350,
-    color: "white",
-    textAlign: "center",
-  },
-  input: {
-    width: "100%",
-    padding: 10,
-    margin: "10px 0",
-    borderRadius: 5,
-    border: "none",
-  },
-  button: {
-    width: "100%",
-    padding: 10,
-    background: "#f59e0b",
-    border: "none",
-    borderRadius: 5,
-    marginTop: 10,
-    cursor: "pointer",
-  },
-  registerBtn: {
-    width: "100%",
-    padding: 10,
-    background: "#334155",
-    border: "none",
-    borderRadius: 5,
-    marginTop: 10,
-    color: "white",
-    cursor: "pointer",
-  },
-};
