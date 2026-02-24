@@ -11,11 +11,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+/* ================== MONGODB ================== */
+
 mongoose.connect(process.env.MONGO_URI as string)
 .then(()=> console.log("MongoDB Connected"))
 .catch(err=> console.log(err));
 
-/* ================= USER MODEL ================= */
+/* ================== TEST ROUTE ================== */
+
+app.get("/", (req,res)=>{
+  res.send("Backend Working");
+});
+
+/* ================== USER MODEL ================== */
 
 const UserSchema = new mongoose.Schema({
   name:String,
@@ -25,7 +33,7 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", UserSchema);
 
-/* ================= REGISTER ================= */
+/* ================== REGISTER ================== */
 
 app.post("/api/auth/register", async (req,res)=>{
   try{
@@ -33,19 +41,19 @@ app.post("/api/auth/register", async (req,res)=>{
 
     const hashed = await bcrypt.hash(password,10);
 
-    const user = await User.create({
+    await User.create({
       name,
       email,
       password:hashed
     });
 
-    res.json({message:"Registered"});
+    res.json({message:"Registered Successfully"});
   }catch(err){
-    res.status(500).json({message:"Register error"});
+    res.status(500).json({message:"Register Error"});
   }
 });
 
-/* ================= LOGIN ================= */
+/* ================== LOGIN ================== */
 
 app.post("/api/auth/login", async (req,res)=>{
   try{
@@ -73,11 +81,11 @@ app.post("/api/auth/login", async (req,res)=>{
     });
 
   }catch(err){
-    res.status(500).json({message:"Login error"});
+    res.status(500).json({message:"Login Error"});
   }
 });
 
-/* ================= SERVER ================= */
+/* ================== SERVER ================== */
 
 const PORT = parseInt(process.env.PORT || "5000");
 
