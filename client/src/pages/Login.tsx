@@ -1,39 +1,63 @@
 import { useState } from "react";
+import API from "../api";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
 
-  const handleLogin = () => {
-    if (username && password) {
-      navigate("/chat");
-    } else {
-      alert("Enter username & password");
+  const handleSubmit = async () => {
+    try {
+      const url = isLogin ? "/api/auth/login" : "/api/auth/register";
+
+      const res = await API.post(url, { email, password });
+
+      if (isLogin) {
+        localStorage.setItem("token", res.data.token);
+        navigate("/chat");
+      } else {
+        alert("Registered successfully. Now login.");
+        setIsLogin(true);
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Error");
     }
   };
 
   return (
     <div style={styles.container}>
-      <div style={styles.box}>
-        <h2>Login - AI Terminal</h2>
+      <div style={styles.card}>
+        <h2>{isLogin ? "Login" : "Register"}</h2>
+
         <input
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
           style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
+
         <input
+          style={styles.input}
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
         />
-        <button onClick={handleLogin} style={styles.button}>
-          Login
+
+        <button style={styles.button} onClick={handleSubmit}>
+          {isLogin ? "Login" : "Register"}
         </button>
+
+        <p
+          style={{ cursor: "pointer", marginTop: 10 }}
+          onClick={() => setIsLogin(!isLogin)}
+        >
+          {isLogin
+            ? "Don't have an account? Register"
+            : "Already have account? Login"}
+        </p>
       </div>
     </div>
   );
@@ -42,34 +66,34 @@ export default function Login() {
 const styles: any = {
   container: {
     height: "100vh",
-    background: "#0f0f0f",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    color: "#00ff88",
-    fontFamily: "monospace",
+    background: "linear-gradient(135deg,#1e3c72,#2a5298)",
   },
-  box: {
-    background: "#111",
-    padding: "40px",
-    border: "1px solid #00ff88",
-    borderRadius: "10px",
+  card: {
+    background: "white",
+    padding: 30,
+    borderRadius: 10,
+    width: 300,
+    textAlign: "center",
   },
   input: {
-    display: "block",
-    marginBottom: "15px",
-    padding: "10px",
-    width: "250px",
-    background: "black",
-    color: "#00ff88",
-    border: "1px solid #00ff88",
+    width: "100%",
+    padding: 10,
+    margin: "10px 0",
+    borderRadius: 5,
+    border: "1px solid #ccc",
   },
   button: {
-    padding: "10px",
     width: "100%",
-    background: "#00ff88",
+    padding: 10,
+    background: "#1e3c72",
+    color: "white",
     border: "none",
+    borderRadius: 5,
     cursor: "pointer",
-    fontWeight: "bold",
   },
 };
+
+export default Login;
