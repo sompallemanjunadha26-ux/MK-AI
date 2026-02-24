@@ -16,12 +16,28 @@ app.use(express.json());
 mongoose.connect(process.env.MONGO_URI as string)
   .then(() => console.log("MongoDB Connected"));
 
-const User = mongoose.model("User", new mongoose.Schema({
+interface IUser extends mongoose.Document {
+  email: string;
+  password: string;
+}
+
+const User = mongoose.model<IUser>("User", new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
 }));
 
-const Chat = mongoose.model("Chat", new mongoose.Schema({
+interface IMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+interface IChat extends mongoose.Document {
+  userId: mongoose.Types.ObjectId;
+  title: string;
+  messages: IMessage[];
+}
+
+const Chat = mongoose.model<IChat>("Chat", new mongoose.Schema({
   userId: mongoose.Schema.Types.ObjectId,
   title: String,
   messages: [
@@ -60,7 +76,7 @@ app.post("/api/auth/register", async (req, res) => {
 
 app.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
-  const user: any = await User.findOne({ email });
+  const user = await User.findOne({ email });
   if (!user) return res.status(400).json({ message: "User not found" });
 
   const match = await bcrypt.compare(password, user.password);
@@ -97,12 +113,18 @@ app.post("/api/ai/:chatId", auth, async (req: any, res) => {
 
   chat.messages.push({ role: "user", content: message });
 
+  // 🔥 FIX: convert mongoose docs → plain objects
+  const formattedMessages = chat.messages.map((m: any) => ({
+    role: m.role,
+    content: m.content
+  }));
+
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
-    messages: chat.messages,
+    messages: formattedMessages
   });
 
-  const reply = completion.choices[0].message.content;
+  const reply = completion.choices[0].message.content as string;
 
   chat.messages.push({ role: "assistant", content: reply });
   await chat.save();
@@ -114,7 +136,8 @@ app.post("/api/upload", auth, upload.single("file"), async (req: any, res) => {
   res.json({ message: "File uploaded", file: req.file });
 });
 
-const PORT = process.env.PORT || 5000;
+// 🔥 FIX PORT TYPE
+const PORT: number = parseInt(process.env.PORT || "5000", 10);
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Server running on port " + PORT);

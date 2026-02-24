@@ -7,34 +7,20 @@ export default function Splash() {
   useEffect(() => {
     setTimeout(() => {
       navigate("/login");
-    }, 3000);
+    }, 2000);
   }, []);
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>AI TERMINAL</h1>
-      <p style={styles.subtitle}>Initializing System...</p>
+    <div style={{
+      height:"100vh",
+      display:"flex",
+      justifyContent:"center",
+      alignItems:"center",
+      background:"#0f172a",
+      color:"white",
+      fontSize:30
+    }}>
+      AI Terminal 🚀
     </div>
   );
 }
-
-const styles: any = {
-  container: {
-    height: "100vh",
-    background: "black",
-    color: "#00ff88",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    fontFamily: "monospace",
-  },
-  title: {
-    fontSize: "48px",
-    textShadow: "0 0 20px #00ff88",
-  },
-  subtitle: {
-    marginTop: "20px",
-    opacity: 0.7,
-  },
-};
