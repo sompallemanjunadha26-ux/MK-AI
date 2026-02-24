@@ -2,62 +2,43 @@ import { useState } from "react";
 import API from "../api";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
+export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(true);
 
-  const handleSubmit = async () => {
-    try {
-      const url = isLogin ? "/api/auth/login" : "/api/auth/register";
+  const login = async () => {
+    const res = await API.post("/api/auth/login", { email, password });
+    localStorage.setItem("token", res.data.token);
+    navigate("/chat");
+  };
 
-      const res = await API.post(url, { email, password });
-
-      if (isLogin) {
-        localStorage.setItem("token", res.data.token);
-        navigate("/chat");
-      } else {
-        alert("Registered successfully. Now login.");
-        setIsLogin(true);
-      }
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Error");
-    }
+  const register = async () => {
+    await API.post("/api/auth/register", { email, password });
+    alert("Registered. Now Login.");
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h2>{isLogin ? "Login" : "Register"}</h2>
-
+        <h2>AI Terminal Login</h2>
         <input
           style={styles.input}
           placeholder="Email"
-          value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
         <input
           style={styles.input}
           type="password"
           placeholder="Password"
-          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-
-        <button style={styles.button} onClick={handleSubmit}>
-          {isLogin ? "Login" : "Register"}
+        <button style={styles.button} onClick={login}>
+          Login
         </button>
-
-        <p
-          style={{ cursor: "pointer", marginTop: 10 }}
-          onClick={() => setIsLogin(!isLogin)}
-        >
-          {isLogin
-            ? "Don't have an account? Register"
-            : "Already have account? Login"}
-        </p>
+        <button style={styles.registerBtn} onClick={register}>
+          Register
+        </button>
       </div>
     </div>
   );
@@ -69,13 +50,14 @@ const styles: any = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(135deg,#1e3c72,#2a5298)",
+    background: "#0f172a",
   },
   card: {
-    background: "white",
-    padding: 30,
+    background: "#1e293b",
+    padding: 40,
     borderRadius: 10,
-    width: 300,
+    width: 350,
+    color: "white",
     textAlign: "center",
   },
   input: {
@@ -83,17 +65,25 @@ const styles: any = {
     padding: 10,
     margin: "10px 0",
     borderRadius: 5,
-    border: "1px solid #ccc",
+    border: "none",
   },
   button: {
     width: "100%",
     padding: 10,
-    background: "#1e3c72",
-    color: "white",
+    background: "#f59e0b",
     border: "none",
     borderRadius: 5,
+    marginTop: 10,
+    cursor: "pointer",
+  },
+  registerBtn: {
+    width: "100%",
+    padding: 10,
+    background: "#334155",
+    border: "none",
+    borderRadius: 5,
+    marginTop: 10,
+    color: "white",
     cursor: "pointer",
   },
 };
-
-export default Login;
